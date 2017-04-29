@@ -9000,3 +9000,165 @@ const issues = [
     "url": "https://api.github.com/repos/learn-co-curriculum/js-donut-lab/issues/2"
   }
 ];
+
+//note: all functions need to be under issues, since they are calling issues
+
+//--updating the API:
+
+var issuesWithUpdatedApiUrl = issues.map(function(issueObject) {
+  var oldUrl = issueObject.url; //this is the link to be replaced... issueObject.url is the key, returning the 'url' value
+  var newUrl = oldUrl.replace('api.github.com', 'api-v2.github.com'); //with each oldUrl, replace the old chunk of text with the new chunk
+  var newBlankObject = {} //creating new black object
+  var newIssueObject = Object.assign(newBlankObject, issueObject) // copying (or 'assigning') every key-value pair from issueObject to blankObject, and assigning the result to the variable newIssueObject
+
+  newIssueObject.url = newUrl //set each newUrl ('api-v2.github.com') as the url in issueObject.url
+  // to do the above all in one line: var newIssueObject = Object.assign(newBlankObject, issueObject, {url: newUrl})
+
+  return newIssueObject //return the updated array of objects with updated urls
+})
+
+//--counting the comments:
+
+////this returns an array containing each comments_count number
+var arrayOfCommentsCounts = issues.map(function(issueObject) {
+  var numOfComments = issueObject.comments_count;
+  //console.log(numOfComments);
+  return numOfComments;
+})
+
+////this sums up the numbers in the above array
+var commentCountAcrossIssues = arrayOfCommentsCounts.reduce(function(total, value) {
+  //console.log(total + value);
+  return total + value;
+}, 0);
+
+//--filtering for open arrays:
+
+var openIssues = issues.filter(function(issueObject) {
+  return issueObject.state === "open" // filter returns all issueObjects that have an issueObject.state value of "open"
+})
+//console.log(openIssues);
+
+
+//--not a robot:
+
+//these are all the issues that ARE automatically generated:
+// var automaticIssues = issues.filter(function(issueObject) {
+//   return issueObject.body.includes("automatically") // filter returns all issueObjects that have an issueObject.body value that includes the word "automatically"
+// })
+
+//these are the issues that ARE NOT automatically geneated:
+var nonAutomaticIssues = issues.filter(function(issueObject) {
+  return !issueObject.body.includes("automatically") // filter returns all issueObjects that DO NOT have an issueObject.body value that includes the word "automatically" (using bang! before the statement)
+})
+//console.log(nonAutomaticIssues);
+
+/////////////////////////last problem::::::
+
+//--showing off:
+
+// Now that we have our nonAutomaticIssues,
+// let's print these out in a table in our HTML page.
+// The base markup has been provided for you in
+// index.html — all we need to do is add rows to the table body.
+
+// Use the DOM API to set the HTML of the table body
+// to a list of table rows that have three columns:
+// the issue body, the date and the state of the issue
+// (open or closed)
+
+// To easily create your HTML markup for all the rows,
+// use .map()
+
+// Hint: the innerHTML property expects a string,
+// so don't forget to turn your array into one big
+// string by using .join()   ////calling .join() after nonAutoIssue.body didn't work, did without using .join()
+
+
+//this works, created dynamically using the map method on nonAutomaticIssues:
+
+var tableRows = nonAutomaticIssues.map(function(nonAutoIssue) {
+
+  var parentTable = document.getElementById("results"); //getting table by its id, since it already exists in the html file:
+
+  var cell_1_Body = document.createElement('td') //creating first cell
+  cell_1_Body.innerHTML = nonAutoIssue.body
+
+  var cell_2_Date = document.createElement('td') //creating second cell
+  cell_2_Date.innerHTML = nonAutoIssue.created_at
+
+  var cell_3_State = document.createElement('td') //creating third cell
+  cell_3_State.innerHTML = nonAutoIssue.state
+
+  var row = document.createElement("tr"); //creating table row
+
+  row.appendChild(cell_1_Body); //appending each cell to the table row
+  row.appendChild(cell_2_Date); //appending each cell to the table row
+  row.appendChild(cell_3_State); //appending each cell to the table row
+
+  parentTable.appendChild(row); //appending table row to the parentTable
+})
+
+/////
+
+////this is close, but it's putting everything into one row, i need 650 rows:
+// var element = document.createElement('div')
+// element.innerHTML = 'Hello, DOM!'
+// document.body.appendChild(element)
+
+// //getting table by its id, since it already exists in the html file:
+// var parentTable = document.getElementById("results");
+// parentTable.innerHTML = 'Hello, parentTable!'
+
+// //creating elements and assiging their innerHTML to data from above
+// var row1_Body = document.createElement('div') //p instead?
+// row1_Body.innerHTML = bodyOfNonAutoIssueString
+//
+// var row2_Date = document.createElement('div') //p instead?
+// row2_Date.innerHTML = dateOfNonAutoIssueString
+//
+// var row3_Issue = document.createElement('div') //p instead?
+// row3_Issue.innerHTML = dateOfNonAutoIssueString //will change this to issue soon
+//
+// //creating table row:
+// var tr = document.createElement('tr'); //'tr' is a 'table row'
+//
+// //creating table cells:
+// var td1 = document.createElement('td'); //'td' stands for 'table data', it's a single cell in a table
+// var td2 = document.createElement('td');
+// var td3 = document.createElement('td');
+//
+// //appending data to each cell:
+// td1.appendChild(row1_Body);  //'td' stands for 'table data', it's a single cell in a table
+// td2.appendChild(row2_Date);
+// td3.appendChild(row3_Issue);
+//
+// //appending each cell to the table row:
+// tr.appendChild(td1);
+// tr.appendChild(td2);
+// tr.appendChild(td3);
+//
+// //appending table row to the parentTable
+// parentTable.appendChild(tr);
+
+//above from here:
+
+///////
+// var table = document.createElement('table');
+// for (var i = 1; i < 4; i++){
+//     var tr = document.createElement('tr');
+//
+//     var td1 = document.createElement('td');
+//     var td2 = document.createElement('td');
+//
+//     var text1 = document.createTextNode('Text1');
+//     var text2 = document.createTextNode('Text2');
+//
+//     td1.appendChild(text1);  //'td' stands for 'table data', it's a single cell in a table
+//     td2.appendChild(text2);
+//     tr.appendChild(td1);
+//     tr.appendChild(td2);
+//
+//     table.appendChild(tr);
+// }
+// document.body.appendChild(table);
